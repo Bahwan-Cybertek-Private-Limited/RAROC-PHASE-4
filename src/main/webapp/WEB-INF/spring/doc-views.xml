@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="XlsSysLog" class="atrix.common.view.admin.XLSSysLog"/>
+<bean id="PdfSysLog" class="atrix.common.view.admin.PDFSysLog"/>
+<bean id="XlsOpsLog" class="atrix.common.view.admin.XLSOpsLog"/>
+<bean id="PdfOpsLog" class="atrix.common.view.admin.PDFOpsLog"/>
+
+<bean id="XlsStressTest" class="atrix.st.view.XLSStressTest"/>
+<bean id="XlsRaroc" class="atrix.st.view.XLSRarocView"/>
+<bean id="PdfRaroc" class="atrix.st.view.PDFRarocView"/>
+<bean id="xlsRarocMaster" class="atrix.st.view.XLSRarocMaster"/>
+<bean id="xlsCCFMaster" class="atrix.st.view.XLSCCFMaster"/>
+<bean id="xlsGuarantor" class="atrix.st.view.XLSGuarantor"/>
+<bean id="xlsExternalRating" class="atrix.st.view.XLSExternalRating"/>
+<bean id="xlsInternalRating" class="atrix.st.view.XLSInternalRating"/>
+<bean id="xlsOthIncome" class="atrix.st.view.XLSOthIncome"/>
+<bean id="xlsOperatingExpenseMaster" class="atrix.st.view.XLSOperatingExpenseMaster"/>
+<bean id="xlsRestructuredMaster" class="atrix.st.view.XLSRestructuredMaster"/>
+<bean id="xlsSensitivityIteration" class="atrix.st.view.XLSSensitivityIteration"/>
+<bean id="xlsAssetType" class="atrix.st.view.XLSAssetType"/>
+<bean id="xlsBusinessUnit" class="atrix.st.view.XLSBusinessUnit"/>
+<bean id="xlsFinHaircut" class="atrix.st.view.XLSFinHaircut"/>
+<bean id="xlsInternalRatingModel" class="atrix.st.view.XLSInternalRatingModel"/>
+<bean id="xlsRatingModelMapping" class="atrix.st.view.XLSRatingModelMapping"/>
+</beans>
