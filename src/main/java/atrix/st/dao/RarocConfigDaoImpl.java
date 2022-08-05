@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.Types;
 
@@ -90,6 +92,58 @@ public class RarocConfigDaoImpl extends JdbcDaoSupport implements RarocConfigDao
             obj.setCol3(fmt.ToString(row.get("N_CODE")));
             obj.setCol4(fmt.ToString(row.get("N_VALUE")));
             obj.setCol5(fmt.ToString(row.get("V_STATUS")));
+            return obj;
+        }).forEach((obj) -> {
+            lists.add(obj);
+        });
+        return new GridPage<>(lists, page, max, rowCount);
+    }
+
+	@Override
+    public GridPage<RarocConfigModel> listRarocCNFGMaster(int page, int max, String sidx, String sord, String searchField,
+            String searchOper, String searchString, String userid) throws CustomException {
+        List<String> columns = Collections.unmodifiableList(Arrays.asList("V_CODE", "D_MIS_DATE",
+                "N_CODE", "N_VALUE"));
+
+        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+        if (sidx == null || sidx.isEmpty()) {
+            sidx = "V_CODE";
+        }
+        if (sord == null || sord.isEmpty()) {
+            sord = "desc";
+        }
+
+        //check if sidx is in columns 
+        if (!columns.contains(sidx)) {
+            throw new CustomException();
+        }
+
+        if (!orders.contains(sord)) {
+            throw new CustomException();
+        }
+
+        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+        String query = "SELECT count(*) FROM MST_RAROC WHERE V_CODE is not null " +qObj.getCondition()  ;
+        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+        final int startIdx = ((page - 1) * max) + 1;
+        final int endIdx = Math.min(startIdx + max, rowCount);
+        query = " SELECT * FROM "
+        		+"( SELECT a.*, rownum rnum FROM "
+        		+ "(SELECT V_CODE,D_MIS_DATE,N_CODE,N_VALUE FROM MST_RAROC "
+                + "WHERE V_CODE is not null "
+                + qObj.getCondition() + " "
+                + "ORDER BY " + sidx + " " + sord + ") a"
+        + " WHERE rownum <= ?) WHERE rnum >= ?";
+        List<RarocConfigModel> lists = new ArrayList<>();
+        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+        rows.stream().map((row) -> {
+        	RarocConfigModel obj = new RarocConfigModel();
+            obj.setId(fmt.ToString(row.get("rnum")));
+            obj.setCol1(fmt.ToString(row.get("V_CODE")));
+            obj.setCol2(fmt.ToString(row.get("D_MIS_DATE")));
+            obj.setCol3(fmt.ToString(row.get("N_CODE")));
+            obj.setCol4(fmt.ToString(row.get("N_VALUE")));
             return obj;
         }).forEach((obj) -> {
             lists.add(obj);
@@ -2751,6 +2805,1038 @@ if (file != null) {
 	            logger.error(e);
 	        }
 		
+	}
+
+	@Override
+	public List<RarocConfigModel> rarocMasterDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,V_CODE,D_MIS_DATE,N_CODE,N_VALUE FROM MST_RAROC WHERE V_CODE is not null ";           
+    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			obj.setId(fmt.ToString(row.get("rnum")));
+            obj.setCol1(fmt.ToString(row.get("V_CODE")));
+            obj.setCol2(fmt.ToString(row.get("D_MIS_DATE")));
+            obj.setCol3(fmt.ToString(row.get("N_CODE")));
+            obj.setCol4(fmt.ToString(row.get("N_VALUE")));
+          return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> internalRatingDoc() {
+	List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query ="SELECT rownum rnum, V_INT_RATING, V_FORMAT_RATING,V_MAPPED_RATING, V_GRADE, V_RATING_TYPE,N_INT_RATING_LIMIT,N_PD,N_LGD,N_PD_NPA,N_LGD_NPA,N_EL,V_MODEL,N_RANK ,V_FORMATED_RATING_LCMC_RD,V_FORMATED_RATING_SME_RD,V_FORMATED_RATING_RD,V_FORMATED_RATING_OSMOS,N_TENURE,F_ELIGIBLE_GUARANTOR,V_GUARANTOR_TYPE,V_MAPPED_EXT_RATING FROM mast_internal_rating WHERE V_INT_RATING is not null";
+  		
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			obj.setId(fmt.ToString(row.get("rnum")));
+        	obj.setCol1(fmt.ToString(row.get("V_INT_RATING")));
+        	obj.setCol2(fmt.ToString(row.get("V_FORMAT_RATING")));
+        	obj.setCol3(fmt.ToString(row.get("V_MAPPED_RATING")));
+        	obj.setCol4(fmt.ToString(row.get("V_GRADE")));
+        	obj.setCol5(fmt.ToString(row.get("V_RATING_TYPE")));
+        	obj.setCol6(fmt.ToString(row.get("N_INT_RATING_LIMIT")));
+        	obj.setCol7(fmt.ToString(row.get("N_PD")));
+        	obj.setCol8(fmt.ToString(row.get("N_LGD")));
+        	obj.setCol9(fmt.ToString(row.get("N_PD_NPA")));
+        	obj.setCol10(fmt.ToString(row.get("N_LGD_NPA")));
+        	obj.setCol11(fmt.ToString(row.get("N_EL")));
+        	obj.setCol12(fmt.ToString(row.get("V_MODEL")));
+        	obj.setCol13(fmt.ToString(row.get("N_RANK")));
+        	obj.setCol14(fmt.ToString(row.get("V_FORMATED_RATING_LCMC_RD")));
+        	obj.setCol15(fmt.ToString(row.get("V_FORMATED_RATING_SME_RD")));
+        	obj.setCol16(fmt.ToString(row.get("V_FORMATED_RATING_RD")));
+        	obj.setCol17(fmt.ToString(row.get("V_FORMATED_RATING_OSMOS")));
+        	obj.setCol18(fmt.ToString(row.get("N_TENURE")));
+        	obj.setCol19(fmt.ToString(row.get("F_ELIGIBLE_GUARANTOR")));
+        	obj.setCol20(fmt.ToString(row.get("V_GUARANTOR_TYPE")));
+        	obj.setCol21(fmt.ToString(row.get("V_MAPPED_EXT_RATING")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> externalRatingDoc() {
+List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,V_RATING_CODE,V_GRADE,V_RANK,F_TERM_FLAG,N_RISK_WEIGHT,N_W,V_GUARANTOR_TYPE FROM mast_external_rating WHERE V_RATING_CODE is not null"; 
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+	        	obj.setCol1(fmt.ToString(row.get("V_RATING_CODE")));
+	        	obj.setCol2(fmt.ToString(row.get("V_GRADE")));
+	        	obj.setCol3(fmt.ToString(row.get("V_RANK")));
+	        	obj.setCol4(fmt.ToString(row.get("F_TERM_FLAG")));
+	        	obj.setCol5(fmt.ToString(row.get("N_RISK_WEIGHT")));
+	        	obj.setCol6(fmt.ToString(row.get("N_W")));
+	        	obj.setCol7(fmt.ToString(row.get("V_GUARANTOR_TYPE")));
+	        	
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+	
+
+	@Override
+	public List<RarocConfigModel> guarantorMasterDoc() {
+List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,V_CODE,N_VALUE,V_MAPPING_COL FROM MST_GUARANTOR WHERE V_CODE is not null";
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  		     obj.setId(fmt.ToString(row.get("rnum")));
+  		     obj.setCol1(fmt.ToString(row.get("V_CODE")));
+  		     obj.setCol2(fmt.ToString(row.get("N_VALUE")));
+  		     obj.setCol3(fmt.ToString(row.get("V_MAPPING_COL")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> othIncomeMasterDoc() {
+List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,OTH_INCOME_TYPE,CI_RATIO,TNFR_RATE FROM MST_OTH_INCOME WHERE OTH_INCOME_TYPE is not null";
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			obj.setId(fmt.ToString(row.get("rnum")));
+        	obj.setCol1(fmt.ToString(row.get("OTH_INCOME_TYPE")));
+        	obj.setCol2(fmt.ToString(row.get("CI_RATIO")));
+        	obj.setCol3(fmt.ToString(row.get("TNFR_RATE")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;	}
+
+	@Override
+	public List<RarocConfigModel> cCFMasterDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,V_CODE,V_FACILITY_TYPE,N_LIMIT_LOWER,N_LIMIT_UPPER,N_UTILIZATION_LOWER,N_UTILIZATION_UPPER,N_DRAWN_CCF,N_UNDRAWN_CCF FROM MST_CCF WHERE V_CODE is not null"; 
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  		   obj.setId(fmt.ToString(row.get("rnum")));
+	       	obj.setCol1(fmt.ToString(row.get("V_CODE")));
+	       	obj.setCol2(fmt.ToString(row.get("V_FACILITY_TYPE")));
+	       	obj.setCol3(fmt.ToString(row.get("N_LIMIT_LOWER")));
+	       	obj.setCol4(fmt.ToString(row.get("N_LIMIT_UPPER")));
+	       	obj.setCol5(fmt.ToString(row.get("N_UTILIZATION_LOWER")));
+	       	obj.setCol6(fmt.ToString(row.get("N_UTILIZATION_UPPER")));
+	       	obj.setCol7(fmt.ToString(row.get("N_DRAWN_CCF")));
+	       	obj.setCol8(fmt.ToString(row.get("N_UNDRAWN_CCF")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> operatingExpenseMasterDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,V_FACILITY,V_SEGMENT,N_LOWER_LEVEL,N_UPPER_LEVEL,V_ID,N_FIXED_COST,N_VARIABLE_COST,V_REGION FROM MST_OPERATING_EXPENSE WHERE V_FACILITY is not null";
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+	        	obj.setCol1(fmt.ToString(row.get("V_FACILITY")));
+	        	obj.setCol2(fmt.ToString(row.get("V_SEGMENT")));
+	        	obj.setCol3(fmt.ToString(row.get("N_LOWER_LEVEL")));
+	        	obj.setCol4(fmt.ToString(row.get("N_UPPER_LEVEL")));
+	        	obj.setCol5(fmt.ToString(row.get("V_ID")));
+	        	obj.setCol6(fmt.ToString(row.get("N_FIXED_COST")));
+	        	obj.setCol7(fmt.ToString(row.get("N_VARIABLE_COST")));
+	        	obj.setCol8(fmt.ToString(row.get("V_REGION")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> restructuredMasterDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,V_CODE,N_RW,N_EL FROM MST_RESTRUCTURED_RW WHERE V_CODE is not null";            
+    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_CODE")));
+	            obj.setCol2(fmt.ToString(row.get("N_RW")));
+	            obj.setCol3(fmt.ToString(row.get("N_EL")));
+	            
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> sensitivityIterationMasterDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,N_VALUE,V_TYPE FROM MST_SENSITIVITY_ITERATIONS WHERE V_TYPE is not null";           
+    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("N_VALUE")));
+	            obj.setCol2(fmt.ToString(row.get("V_TYPE")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> assetTypeDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		
+  		String query = "SELECT rownum rnum,V_CODE,V_DESC,N_VALUE,V_GUAR_FLAG FROM MST_ASSET_TYPE WHERE V_CODE is not null ";           
+    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_CODE")));
+	            obj.setCol2(fmt.ToString(row.get("V_DESC")));
+	            obj.setCol3(fmt.ToString(row.get("N_VALUE")));
+	            obj.setCol4(fmt.ToString(row.get("V_GUAR_FLAG")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> businessUnitDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		String query = "SELECT rownum rnum,V_CODE,V_DESC,F_LATEST_IND FROM MST_BUSINESS_UNIT WHERE V_CODE is not null ";           
+	    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+  			obj.setCol1(fmt.ToString(row.get("V_CODE")));
+            obj.setCol2(fmt.ToString(row.get("V_DESC")));
+            obj.setCol3(fmt.ToString(row.get("F_LATEST_IND")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> finHaircutDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		String query = "SELECT rownum rnum,V_FIN_SEC,N_HAIRCUT,N_REG_HAIRCUT FROM mst_fin_haircut WHERE V_FIN_SEC is not null ";           
+	    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+  			obj.setCol1(fmt.ToString(row.get("V_FIN_SEC")));
+            obj.setCol2(fmt.ToString(row.get("N_HAIRCUT")));
+            obj.setCol3(fmt.ToString(row.get("N_REG_HAIRCUT")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> internalRatingModelDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		String query = "SELECT rownum rnum,V_RDM_INT_RAT,V_INT_RATING FROM cnfg_int_rat_mapping WHERE V_RDM_INT_RAT is not null ";           
+	    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			 obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_RDM_INT_RAT")));
+	            obj.setCol2(fmt.ToString(row.get("V_INT_RATING")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public List<RarocConfigModel> ratingModelMappingDoc() {
+		List<RarocConfigModel> list = new ArrayList<>();
+		String query = "SELECT rownum rnum, V_SEGMENT,M_RDM_MODEL FROM cnfg_rating_model_map WHERE V_SEGMENT is not null ";           
+	    
+  		List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query);
+  		rows.stream().map((row) -> {
+  			RarocConfigModel obj = new RarocConfigModel();
+  			obj.setId(fmt.ToString(row.get("rnum")));
+            obj.setCol1(fmt.ToString(row.get("V_SEGMENT")));
+            obj.setCol2(fmt.ToString(row.get("M_RDM_MODEL")));
+  			return obj;
+  		}).forEach((obj) -> {
+  			list.add(obj);
+  		});
+
+  		return list;
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGInternalRating(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_INT_RATING", "V_FORMAT_RATING","V_MAPPED_RATING", "V_GRADE", "V_RATING_TYPE","N_INT_RATING_LIMIT","N_PD","N_LGD","N_PD_NPA","N_LGD_NPA","N_EL","V_MODEL","N_RANK ","V_FORMATED_RATING_LCMC_RD","V_FORMATED_RATING_SME_RD","V_FORMATED_RATING_RD","V_FORMATED_RATING_OSMOS","N_TENURE","F_ELIGIBLE_GUARANTOR","V_GUARANTOR_TYPE","V_MAPPED_EXT_RATING"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_INT_RATING";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM mast_internal_rating WHERE V_INT_RATING is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	        		+"(SELECT V_INT_RATING, V_FORMAT_RATING,V_MAPPED_RATING, V_GRADE, V_RATING_TYPE,N_INT_RATING_LIMIT,N_PD,N_LGD,N_PD_NPA,N_LGD_NPA,N_EL,V_MODEL,N_RANK ,V_FORMATED_RATING_LCMC_RD,V_FORMATED_RATING_SME_RD,V_FORMATED_RATING_RD,V_FORMATED_RATING_OSMOS,N_TENURE,F_ELIGIBLE_GUARANTOR,V_GUARANTOR_TYPE,V_MAPPED_EXT_RATING FROM mast_internal_rating "
+	                + "WHERE V_INT_RATING is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ")a"
+	         + " WHERE rownum <= ?) WHERE rnum >= ?";
+     List<RarocConfigModel> lists = new ArrayList<>();
+     List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	        	obj.setCol1(fmt.ToString(row.get("V_INT_RATING")));
+	        	obj.setCol2(fmt.ToString(row.get("V_FORMAT_RATING")));
+	        	obj.setCol3(fmt.ToString(row.get("V_MAPPED_RATING")));
+	        	obj.setCol4(fmt.ToString(row.get("V_GRADE")));
+	        	obj.setCol5(fmt.ToString(row.get("V_RATING_TYPE")));
+	        	obj.setCol6(fmt.ToString(row.get("N_INT_RATING_LIMIT")));
+	        	obj.setCol7(fmt.ToString(row.get("N_PD")));
+	        	obj.setCol8(fmt.ToString(row.get("N_LGD")));
+	        	obj.setCol9(fmt.ToString(row.get("N_PD_NPA")));
+	        	obj.setCol10(fmt.ToString(row.get("N_LGD_NPA")));
+	        	obj.setCol11(fmt.ToString(row.get("N_EL")));
+	        	obj.setCol12(fmt.ToString(row.get("V_MODEL")));
+	        	obj.setCol13(fmt.ToString(row.get("N_RANK")));
+	        	obj.setCol14(fmt.ToString(row.get("V_FORMATED_RATING_LCMC_RD")));
+	        	obj.setCol15(fmt.ToString(row.get("V_FORMATED_RATING_SME_RD")));
+	        	obj.setCol16(fmt.ToString(row.get("V_FORMATED_RATING_RD")));
+	        	obj.setCol17(fmt.ToString(row.get("V_FORMATED_RATING_OSMOS")));
+	        	obj.setCol18(fmt.ToString(row.get("N_TENURE")));
+	        	obj.setCol19(fmt.ToString(row.get("F_ELIGIBLE_GUARANTOR")));
+	        	obj.setCol20(fmt.ToString(row.get("V_GUARANTOR_TYPE")));
+	        	obj.setCol21(fmt.ToString(row.get("V_MAPPED_EXT_RATING")));
+
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGExternalRating(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_RATING_CODE","V_GRADE","V_RANK","F_TERM_FLAG","N_RISK_WEIGHT","N_W","V_GUARANTOR_TYPE"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_RATING_CODE";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM mast_external_rating WHERE V_RATING_CODE is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	        		+"(SELECT V_RATING_CODE,V_GRADE,V_RANK,F_TERM_FLAG,N_RISK_WEIGHT,N_W,V_GUARANTOR_TYPE FROM mast_external_rating "
+	                + "WHERE V_RATING_CODE is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ")a"
+	         + " WHERE rownum <= ?) WHERE rnum >= ?";
+     List<RarocConfigModel> lists = new ArrayList<>();
+     List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	        	obj.setCol1(fmt.ToString(row.get("V_RATING_CODE")));
+	        	obj.setCol2(fmt.ToString(row.get("V_GRADE")));
+	        	obj.setCol3(fmt.ToString(row.get("V_RANK")));
+	        	obj.setCol4(fmt.ToString(row.get("F_TERM_FLAG")));
+	        	obj.setCol5(fmt.ToString(row.get("N_RISK_WEIGHT")));
+	        	obj.setCol6(fmt.ToString(row.get("N_W")));
+	        	obj.setCol7(fmt.ToString(row.get("V_GUARANTOR_TYPE")));
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGGuarantorMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		List<String> columns = Collections.unmodifiableList(Arrays.asList("V_CODE", "N_VALUE",
+                "V_MAPPING_COL"));
+
+        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+        if (sidx == null || sidx.isEmpty()) {
+            sidx = "V_CODE";
+        }
+        if (sord == null || sord.isEmpty()) {
+            sord = "desc";
+        }
+
+        //check if sidx is in columns 
+        if (!columns.contains(sidx)) {
+            throw new CustomException();
+        }
+
+        if (!orders.contains(sord)) {
+            throw new CustomException();
+        }
+
+        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+        String query = "SELECT count(*) FROM MST_GUARANTOR WHERE V_CODE is not null " +qObj.getCondition()  ;
+        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+        final int startIdx = ((page - 1) * max) + 1;
+        final int endIdx = Math.min(startIdx + max, rowCount);
+        query = " SELECT * FROM "
+        		+"( SELECT a.*, rownum rnum FROM "
+        		+"(SELECT V_CODE,N_VALUE,V_MAPPING_COL FROM MST_GUARANTOR "
+                + "WHERE V_CODE is not null "
+                + qObj.getCondition() + " "
+                + "ORDER BY " + sidx + " " + sord + ")a"
+         + " WHERE rownum <= ?) WHERE rnum >= ?";
+    List<RarocConfigModel> lists = new ArrayList<>();
+    List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+        rows.stream().map((row) -> {
+        	RarocConfigModel obj = new RarocConfigModel();
+            obj.setId(fmt.ToString(row.get("rnum")));
+        	obj.setCol1(fmt.ToString(row.get("V_CODE")));
+        	obj.setCol2(fmt.ToString(row.get("N_VALUE")));
+        	obj.setCol3(fmt.ToString(row.get("V_MAPPING_COL")));
+            return obj;
+        }).forEach((obj) -> {
+            lists.add(obj);
+        });
+        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGOthIncomeMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("OTH_INCOME_TYPE","CI_RATIO",
+	                "TNFR_RATE"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "OTH_INCOME_TYPE";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM MST_OTH_INCOME WHERE OTH_INCOME_TYPE is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	        		+"(SELECT OTH_INCOME_TYPE,CI_RATIO,TNFR_RATE FROM MST_OTH_INCOME "
+	                + "WHERE OTH_INCOME_TYPE is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ")a"
+	         + " WHERE rownum <= ?) WHERE rnum >= ?";
+     List<RarocConfigModel> lists = new ArrayList<>();
+     List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("OTH_INCOME_TYPE")));
+	        	obj.setCol2(fmt.ToString(row.get("CI_RATIO")));
+	        	obj.setCol3(fmt.ToString(row.get("TNFR_RATE")));
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGCCFMaster(int page, int max, String sidx, String sord, String searchField,
+			String searchOper, String searchString, String userid) throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_CODE","V_FACILITY_TYPE","N_LIMIT_LOWER","N_LIMIT_UPPER","N_UTILIZATION_LOWER","N_UTILIZATION_UPPER","N_DRAWN_CCF","N_UNDRAWN_CCF"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_CODE";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM MST_CCF WHERE V_CODE is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	           		+"(SELECT V_CODE,V_FACILITY_TYPE,N_LIMIT_LOWER,N_LIMIT_UPPER,N_UTILIZATION_LOWER,N_UTILIZATION_UPPER,N_DRAWN_CCF,N_UNDRAWN_CCF FROM MST_CCF "
+	                + "WHERE V_CODE is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ")a"
+	         + " WHERE rownum <= ?) WHERE rnum >= ?";
+     List<RarocConfigModel> lists = new ArrayList<>();
+     List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	        	obj.setCol1(fmt.ToString(row.get("V_CODE")));
+	        	obj.setCol2(fmt.ToString(row.get("V_FACILITY_TYPE")));
+	        	obj.setCol3(fmt.ToString(row.get("N_LIMIT_LOWER")));
+	        	obj.setCol4(fmt.ToString(row.get("N_LIMIT_UPPER")));
+	        	obj.setCol5(fmt.ToString(row.get("N_UTILIZATION_LOWER")));
+	        	obj.setCol6(fmt.ToString(row.get("N_UTILIZATION_UPPER")));
+	        	obj.setCol7(fmt.ToString(row.get("N_DRAWN_CCF")));
+	        	obj.setCol8(fmt.ToString(row.get("N_UNDRAWN_CCF")));
+
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGOperatingExpenseMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_FACILITY","V_SEGMENT","N_LOWER_LEVEL","N_UPPER_LEVEL","V_ID","N_FIXED_COST","N_VARIABLE_COST","V_REGION"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_FACILITY";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM MST_OPERATING_EXPENSE WHERE V_FACILITY is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	           		+"(SELECT V_FACILITY,V_SEGMENT,N_LOWER_LEVEL,N_UPPER_LEVEL,V_ID,N_FIXED_COST,N_VARIABLE_COST,V_REGION FROM MST_OPERATING_EXPENSE "
+	                + "WHERE V_FACILITY is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ")a"
+	         + " WHERE rownum <= ?) WHERE rnum >= ?";
+     List<RarocConfigModel> lists = new ArrayList<>();
+     List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	        	obj.setCol1(fmt.ToString(row.get("V_FACILITY")));
+	        	obj.setCol2(fmt.ToString(row.get("V_SEGMENT")));
+	        	obj.setCol3(fmt.ToString(row.get("N_LOWER_LEVEL")));
+	        	obj.setCol4(fmt.ToString(row.get("N_UPPER_LEVEL")));
+	        	obj.setCol5(fmt.ToString(row.get("V_ID")));
+	        	obj.setCol6(fmt.ToString(row.get("N_FIXED_COST")));
+	        	obj.setCol7(fmt.ToString(row.get("N_VARIABLE_COST")));
+	        	obj.setCol8(fmt.ToString(row.get("V_REGION")));
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGRestructuredMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_CODE", "N_RW",
+	                "N_EL"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_CODE";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM MST_RESTRUCTURED_RW WHERE V_CODE is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	             	+"(SELECT V_CODE,N_RW,N_EL FROM MST_RESTRUCTURED_RW "
+	                + "WHERE V_CODE is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ")a"
+	         + " WHERE rownum <= ?) WHERE rnum >= ?";
+     List<RarocConfigModel> lists = new ArrayList<>();
+     List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_CODE")));
+	            obj.setCol2(fmt.ToString(row.get("N_RW")));
+	            obj.setCol3(fmt.ToString(row.get("N_EL")));
+	            
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGSensitivityIterationMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("N_VALUE", "V_TYPE"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "N_VALUE";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM MST_SENSITIVITY_ITERATIONS WHERE N_VALUE is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	           		+"(SELECT N_VALUE,V_TYPE FROM MST_SENSITIVITY_ITERATIONS "
+	                + "WHERE N_VALUE is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ")a"
+	         + " WHERE rownum <= ?) WHERE rnum >= ?";
+     List<RarocConfigModel> lists = new ArrayList<>();
+     List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("N_VALUE")));
+	            obj.setCol2(fmt.ToString(row.get("V_TYPE")));
+	            ;
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGAssetType(int page, int max, String sidx, String sord, String searchField,
+			String searchOper, String searchString, String userid) throws CustomException {
+		List<String> columns = Collections.unmodifiableList(Arrays.asList("V_CODE", "V_DESC",
+                "N_VALUE", "V_GUAR_FLAG"));
+
+        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+        if (sidx == null || sidx.isEmpty()) {
+            sidx = "V_CODE";
+        }
+        if (sord == null || sord.isEmpty()) {
+            sord = "desc";
+        }
+
+        //check if sidx is in columns 
+        if (!columns.contains(sidx)) {
+            throw new CustomException();
+        }
+
+        if (!orders.contains(sord)) {
+            throw new CustomException();
+        }
+
+        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+        String query = "SELECT count(*) FROM MST_ASSET_TYPE WHERE V_CODE is not null " +qObj.getCondition()  ;
+        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+        final int startIdx = ((page - 1) * max) + 1;
+        final int endIdx = Math.min(startIdx + max, rowCount);
+        query = " SELECT * FROM "
+        		+"( SELECT a.*, rownum rnum FROM "
+        		+ "(SELECT V_CODE,V_DESC,N_VALUE,V_GUAR_FLAG FROM MST_ASSET_TYPE "
+                + "WHERE V_CODE is not null "
+                + qObj.getCondition() + " "
+                + "ORDER BY " + sidx + " " + sord + ") a"
+        + " WHERE rownum <= ?) WHERE rnum >= ?";
+        List<RarocConfigModel> lists = new ArrayList<>();
+        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+        rows.stream().map((row) -> {
+        	RarocConfigModel obj = new RarocConfigModel();
+            obj.setId(fmt.ToString(row.get("rnum")));
+            obj.setCol1(fmt.ToString(row.get("V_CODE")));
+            obj.setCol2(fmt.ToString(row.get("V_DESC")));
+            obj.setCol3(fmt.ToString(row.get("N_VALUE")));
+            obj.setCol4(fmt.ToString(row.get("V_GUAR_FLAG")));
+            return obj;
+        }).forEach((obj) -> {
+            lists.add(obj);
+        });
+        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGBusinessUnit(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_CODE", "V_DESC",
+	                "F_LATEST_IND"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_CODE";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM MST_BUSINESS_UNIT WHERE V_CODE is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	        		+ "(SELECT V_CODE,V_DESC,F_LATEST_IND FROM MST_BUSINESS_UNIT "
+	                + "WHERE V_CODE is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ") a"
+	        + " WHERE rownum <= ?) WHERE rnum >= ?";
+	        List<RarocConfigModel> lists = new ArrayList<>();
+	        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_CODE")));
+	            obj.setCol2(fmt.ToString(row.get("V_DESC")));
+	            obj.setCol3(fmt.ToString(row.get("F_LATEST_IND")));
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGFinHaircut(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_FIN_SEC", "N_HAIRCUT",
+	                "N_REG_HAIRCUT"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_FIN_SEC";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM mst_fin_haircut WHERE V_FIN_SEC is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	        		+ "(SELECT V_FIN_SEC,N_HAIRCUT,N_REG_HAIRCUT FROM mst_fin_haircut "
+	                + "WHERE V_FIN_SEC is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ") a"
+	        + " WHERE rownum <= ?) WHERE rnum >= ?";
+	        List<RarocConfigModel> lists = new ArrayList<>();
+	        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_FIN_SEC")));
+	            obj.setCol2(fmt.ToString(row.get("N_HAIRCUT")));
+	            obj.setCol3(fmt.ToString(row.get("N_REG_HAIRCUT")));
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGInternalRatingModel(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_RDM_INT_RAT", "V_INT_RATING"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_RDM_INT_RAT";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM cnfg_int_rat_mapping WHERE V_RDM_INT_RAT is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	        		+ "(SELECT V_RDM_INT_RAT,V_INT_RATING FROM cnfg_int_rat_mapping "
+	                + "WHERE V_RDM_INT_RAT is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ") a"
+	        + " WHERE rownum <= ?) WHERE rnum >= ?";
+	        List<RarocConfigModel> lists = new ArrayList<>();
+	        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_RDM_INT_RAT")));
+	            obj.setCol2(fmt.ToString(row.get("V_INT_RATING")));
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGRatingModelMapping(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, String userid)
+			throws CustomException {
+		 List<String> columns = Collections.unmodifiableList(Arrays.asList("V_SEGMENT", "M_RDM_MODEL"));
+
+	        List<String> orders = Collections.unmodifiableList(Arrays.asList("asc", "desc"));
+
+	        if (sidx == null || sidx.isEmpty()) {
+	            sidx = "V_SEGMENT";
+	        }
+	        if (sord == null || sord.isEmpty()) {
+	            sord = "desc";
+	        }
+
+	        //check if sidx is in columns 
+	        if (!columns.contains(sidx)) {
+	            throw new CustomException();
+	        }
+
+	        if (!orders.contains(sord)) {
+	            throw new CustomException();
+	        }
+
+	        QueryBuilderModel qObj = queryBuilder.SearchAnd(searchOper, searchField, searchString, columns);
+	        String query = "SELECT count(*) FROM cnfg_rating_model_map WHERE V_SEGMENT is not null " +qObj.getCondition()  ;
+	        int rowCount = getJdbcTemplate().queryForObject(query, new Object[]{qObj.getRegex()}, Integer.class);
+	        final int startIdx = ((page - 1) * max) + 1;
+	        final int endIdx = Math.min(startIdx + max, rowCount);
+	        query = " SELECT * FROM "
+	        		+"( SELECT a.*, rownum rnum FROM "
+	        		+ "(SELECT V_SEGMENT,M_RDM_MODEL FROM cnfg_rating_model_map "
+	                + "WHERE V_SEGMENT is not null "
+	                + qObj.getCondition() + " "
+	                + "ORDER BY " + sidx + " " + sord + ") a"
+	        + " WHERE rownum <= ?) WHERE rnum >= ?";
+	        List<RarocConfigModel> lists = new ArrayList<>();
+	        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(query, new Object[]{ qObj.getRegex(),endIdx, startIdx});
+	        rows.stream().map((row) -> {
+	        	RarocConfigModel obj = new RarocConfigModel();
+	            obj.setId(fmt.ToString(row.get("rnum")));
+	            obj.setCol1(fmt.ToString(row.get("V_SEGMENT")));
+	            obj.setCol2(fmt.ToString(row.get("M_RDM_MODEL")));
+	            return obj;
+	        }).forEach((obj) -> {
+	            lists.add(obj);
+	        });
+	        return new GridPage<>(lists, page, max, rowCount);
+
 	}
 
 	

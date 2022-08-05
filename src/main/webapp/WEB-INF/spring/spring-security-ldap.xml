@@ -66,7 +66,7 @@
         <custom-filter after="BASIC_AUTH_FILTER" ref="CustomFilter"/>
         <session-management>
             <concurrency-control expired-url="/login/sessionExpired" max-sessions="1"
-                                 error-if-maximum-exceeded ="true"
+                                 error-if-maximum-exceeded ="false"
                                  session-registry-ref="sessionRegistry"/>
         </session-management>
     </http>

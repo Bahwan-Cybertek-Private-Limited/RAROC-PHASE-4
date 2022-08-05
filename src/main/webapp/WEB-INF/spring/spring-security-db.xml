@@ -68,8 +68,8 @@
                             authentication-success-handler-ref="successHandler"
                             authentication-failure-url = "/login"/>
         <session-management>
-            <concurrency-control expired-url="/login/sessionExpired" max-sessions="100"
-                                 error-if-maximum-exceeded ="true"
+            <concurrency-control expired-url="/login/sessionExpired" max-sessions="1"
+                                 error-if-maximum-exceeded ="false"
                                  session-registry-ref="sessionRegistry"/>
         </session-management>
 

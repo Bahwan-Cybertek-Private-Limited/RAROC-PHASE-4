@@ -92,6 +92,23 @@
         <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/FinHaircut.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/RatingModelMapping.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/InternalRatingModel.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/listcnfgmaster.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgccf.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgExternalRating.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgguarantor.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgInternalRating.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgOperatingExpenses.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgothIncome.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgrestructured.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgsensitivityIteration.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgAssetType.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgBusinessUnit.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgFinHaircut.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgRatingModelMapping.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/resources/scripts/grid/master/cnfgInternalRatingModel.js"/>"></script>
+        
+        
+        
 
     </head>
     <body>
@@ -157,7 +174,7 @@
             		</div>
 					
 <br/><br/>
-		<div class="col-lg-12">				
+		<div class="col-lg-6">				
 						
                             <div id="jqgrid" class="spacing" > 
                                 <table id="grid"></table>
@@ -218,6 +235,66 @@
                             <br />
                         </div>
              
+		<div class="col-lg-6">				
+						
+                            <div id="masterjqgrid" class="spacing" > 
+                                <table id="mastergrid"></table>
+                                <div id="masterpager"></div>                    
+                            </div>
+                             <div id="masterintjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterintgrid"></table>
+                                <div id="masterintpager"></div>                    
+                            </div>
+                             <div id="masterextjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterextgrid"></table>
+                                <div id="masterextpager"></div>                    
+                            </div>
+                             <div id="masterguajqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterguagrid"></table>
+                                <div id="masterguapager"></div>                    
+                            </div>
+                             <div id="masterimjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterimgrid"></table>
+                                <div id="masterimpager"></div>                    
+                            </div>
+                             <div id="masterccfjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterccfgrid"></table>
+                                <div id="masterccfpager"></div>                    
+                            </div>
+                             <div id="masteroejqgrid" class="spacing" style="display: none;"> 
+                                <table id="masteroegrid"></table>
+                                <div id="masteroepager"></div>                    
+                            </div>
+                             <div id="masterrmjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterrmgrid"></table>
+                                <div id="masterrmpager"></div>                    
+                            </div>
+                             <div id="mastersmjqgrid" class="spacing" style="display: none;"> 
+                                <table id="mastersmgrid"></table>
+                                <div id="mastersmpager"></div>                    
+                            </div>
+                             <div id="masteratjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masteratgrid"></table>
+                                <div id="masteratpager"></div>                    
+                            </div>
+                             <div id="masterfhjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterfhgrid"></table>
+                                <div id="masterfhpager"></div>                    
+                            </div>
+                             <div id="masterrmmjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterrmmgrid"></table>
+                                <div id="masterrmmpager"></div>                    
+                            </div>
+                             <div id="masterirmjqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterirmgrid"></table>
+                                <div id="masterirmpager"></div>                    
+                            </div>
+                             <div id="masterbujqgrid" class="spacing" style="display: none;"> 
+                                <table id="masterbugrid"></table>
+                                <div id="masterbupager"></div>                    
+                            </div>
+                            <br />
+                        </div>
 					                        
                     </div>
 
@@ -241,10 +318,13 @@
     <script type="text/javascript">
     $(document).ready(function(){
       var divs = ["jqgrid", "intjqgrid", "extjqgrid", "guajqgrid","imjqgrid","ccfjqgrid","oejqgrid","rmjqgrid","smjqgrid","atjqgrid","fhjqgrid","rmmjqgrid","irmjqgrid","bujqgrid"];
+      var masterDivs=["masterjqgrid", "masterintjqgrid", "masterextjqgrid", "masterguajqgrid","masterimjqgrid","masterccfjqgrid","masteroejqgrid","masterrmjqgrid","mastersmjqgrid","masteratjqgrid","masterfhjqgrid","masterrmmjqgrid","masterirmjqgrid","masterbujqgrid"];
       var tableNames=["TEMP_MST_RAROC","TEMP_mast_internal_rating","TEMP_mast_external_rating","TEMP_MST_GUARANTOR","TEMP_MST_OTH_INCOME","TEMP_MST_CCF","TEMP_MST_OPERATING_EXPENSE","TEMP_MST_RESTRUCTURED_RW","TEMP_MST_SENSITIVITY_ITERATIONS","TEMP_MST_ASSET_TYPE","TEMP_mst_fin_haircut","TEMP_cnfg_rating_model_map","TEMP_cnfg_int_rat_mapping","TEMP_MST_BUSINESS_UNIT"];
       var visibleId = null;
+      var mastervisibleId=null;
       $('#masterTables').change(function() {
         	 show($(this).val());
+        	
         	 
         	 var pos = divs.indexOf($(this).val() );
         	 var tableName= tableNames[pos]; 
@@ -257,25 +337,47 @@
         function show(id) {
            if(visibleId !== id) {
             visibleId = id;
+            mastervisibleId='master'+visibleId
+            
             } 
           hide();
         }
         function hide() {
-	          var div, i, id;
+	          var div, i, id,masterid;
 	          for(i = 0; i < divs.length; i++) {
 		            id = divs[i];
 		            div = document.getElementById(id);
+		            
 		            if(visibleId === id) {
 		              div.style.display = "block";
+		            
 		            } else {
 		              div.style.display = "none";
+		              
 		            }
+		            
+		            
 	          }
-	    }  
+	          
+	          for(j = 0; j < masterDivs.length; j++) {
+		           masterid = masterDivs[j];
+		          
+		            div = document.getElementById(masterid);
+		            
+		            if('master'+visibleId === masterid) {
+		              div.style.display = "block";
+		            
+		            } else {
+		              div.style.display = "none";
+		              
+		            }
+		            
+		            
+	          }
+	          
+	       }  
     	
-    	
-    	
-    	
+     	
         
     });
     

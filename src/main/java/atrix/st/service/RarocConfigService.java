@@ -15,6 +15,10 @@ public interface RarocConfigService {
 
 	 public GridPage<RarocConfigModel> listRarocConfig(int page, int max, String sidx, String sord,
 	            String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+	 
+	 public GridPage<RarocConfigModel> listRarocCNFGMaster(int page, int max, String sidx, String sord,
+	            String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
 
 	 public List<RarocConfigModel> listRarocMasterDoc();
 	 
@@ -158,4 +162,72 @@ public interface RarocConfigService {
 	 
 	 public void approveBusinessUnit();
 	 
+	 public List<RarocConfigModel> rarocMasterDoc();
+	 
+	 public List<RarocConfigModel> internalRatingDoc();
+	 
+	 public List<RarocConfigModel> externalRatingDoc();
+	 
+	 public List<RarocConfigModel> guarantorMasterDoc();
+	 
+	 public List<RarocConfigModel> othIncomeMasterDoc();
+	 
+    public List<RarocConfigModel> cCFMasterDoc();
+    
+    public List<RarocConfigModel> operatingExpenseMasterDoc();
+    
+    public List<RarocConfigModel> restructuredMasterDoc();
+    
+    public List<RarocConfigModel> sensitivityIterationMasterDoc();
+
+	public List<RarocConfigModel> assetTypeDoc();
+	
+	public List<RarocConfigModel> businessUnitDoc();
+	
+	public List<RarocConfigModel> finHaircutDoc();
+	
+	public List<RarocConfigModel> internalRatingModelDoc();
+	
+	public List<RarocConfigModel> ratingModelMappingDoc();
+	
+
+public GridPage<RarocConfigModel> listCNFGInternalRating(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGExternalRating(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGGuarantorMaster(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGOthIncomeMaster(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGCCFMaster(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGOperatingExpenseMaster(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGRestructuredMaster(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGSensitivityIterationMaster(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGAssetType(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGBusinessUnit(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGFinHaircut(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGInternalRatingModel(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
+public GridPage<RarocConfigModel> listCNFGRatingModelMapping(int page, int max, String sidx, String sord,
+String searchField, String searchOper, String searchString, HttpServletRequest request) throws CustomException;
+
 }

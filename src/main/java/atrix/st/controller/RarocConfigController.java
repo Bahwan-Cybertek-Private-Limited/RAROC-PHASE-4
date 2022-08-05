@@ -61,6 +61,8 @@ public class RarocConfigController {
 	        return gridList;
 	    }
 	    
+	    
+	    
 	    @RequestMapping(value = "/listRarocMaster/doc", method = RequestMethod.GET)
 	    public String listRarocMasterDoc(Map<String, Object> map, HttpServletRequest request) {
 	        HttpSession session = request.getSession(false);
@@ -69,6 +71,31 @@ public class RarocConfigController {
 	    		
 	    }
 	    
+	    @RequestMapping(value = "/grid/listRarocCNFGMaster", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listRarocCNFGMaster(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listRarocCNFGMaster(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    
+	    @RequestMapping(value = "/listRarocCNFGMaster/doc", method = RequestMethod.GET)
+	    public String listRarocCNFGMasterDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.rarocMasterDoc());
+	        return "xlsCNFGRarocMaster";
+	    		
+	    }
 	    @RequestMapping( value = "/jqgrid",method = RequestMethod.POST)
 		public String uploadFile(@RequestParam("file") MultipartFile file) {
 	    	try {
@@ -120,6 +147,33 @@ public class RarocConfigController {
 			 return "raroc/rarocConfigMain";
 		}
 	    
+	    
+	    @RequestMapping(value = "/grid/listCNFGInternalRating", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGInternalRating(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGInternalRating(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGInternalRating/doc", method = RequestMethod.GET)
+	    public String listCNFGnternalRatingDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.internalRatingDoc());
+	        return "xlsCNFGInternalRating";
+	    		
+	    }
+	    
+	    
 	    @RequestMapping(value = "/grid/listExternalRating", method = RequestMethod.GET)
 	    public @ResponseBody
 	    GridPage<RarocConfigModel> listExternalRating(
@@ -157,6 +211,34 @@ public class RarocConfigController {
 			}
 			 return "raroc/rarocConfigMain";
 		}
+	    
+	    @RequestMapping(value = "/grid/listCNFGExternalRating", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGExternalRating(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGExternalRating(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+
+	    @RequestMapping(value = "/listCNFGExternalRating/doc", method = RequestMethod.GET)
+	    public String listCNFGExternalRatingDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.externalRatingDoc());
+	        return "xlsCNFGExternalRating";
+	    		
+	    }
+	    
+	    
 	    @RequestMapping(value = "/grid/listGuarantorMaster", method = RequestMethod.GET)
 	    public @ResponseBody
 	    GridPage<RarocConfigModel> listGuarantorMaster(
@@ -193,6 +275,31 @@ public class RarocConfigController {
 			}
 			 return "raroc/rarocConfigMain";
 		}
+	    
+	    @RequestMapping(value = "/grid/listCNFGGuarantorMaster", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGGuarantorMaster(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGGuarantorMaster(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGGuarantorMaster/doc", method = RequestMethod.GET)
+	    public String listCNFGGuarantorMasterDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.guarantorMasterDoc());
+	        return "xlsCNFGGuarantor";
+	    		
+	    } 
 	    @RequestMapping(value = "/grid/listOthIncomeMaster", method = RequestMethod.GET)
 	    public @ResponseBody
 	    GridPage<RarocConfigModel> listOthIncomeMaster(
@@ -229,6 +336,32 @@ public class RarocConfigController {
 			}
 			 return "raroc/rarocConfigMain";
 		}
+	    
+	    @RequestMapping(value = "/grid/listCNFGOthIncomeMaster", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGOthIncomeMaster(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGOthIncomeMaster(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	
+	    @RequestMapping(value = "/listCNFGOthIncomeMaster/doc", method = RequestMethod.GET)
+	    public String listCNFGOthIncomeMasterDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.othIncomeMasterDoc());
+	        return "xlsCNFGOthIncome";
+	    		
+	    }
+	
 	    
 	    @RequestMapping(value = "/grid/listCCFMaster", method = RequestMethod.GET)
 	    public @ResponseBody
@@ -267,6 +400,31 @@ public class RarocConfigController {
 			 return "raroc/rarocConfigMain";
 		}
 	    
+	    
+	    @RequestMapping(value = "/grid/listCNFGCCFMaster", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGCCFMaster(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGCCFMaster(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGCCFMaster/doc", method = RequestMethod.GET)
+	    public String listCNFGCCFMasterDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.cCFMasterDoc());
+	        return "xlsCNFGCCFMaster";
+	    		
+	    }
 	    @RequestMapping(value = "/grid/listOperatingExpenseMaster", method = RequestMethod.GET)
 	    public @ResponseBody
 	    GridPage<RarocConfigModel> listOperatingExpenseMaster(
@@ -304,6 +462,31 @@ public class RarocConfigController {
 	  			}
 	  			 return "raroc/rarocConfigMain";
 	  		}
+	    
+	    @RequestMapping(value = "/grid/listCNFGOperatingExpenseMaster", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGOperatingExpenseMaster(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGOperatingExpenseMaster(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGOperatingExpenseMaster/doc", method = RequestMethod.GET)
+	    public String listCNFGOperatingExpenseMasterDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.operatingExpenseMasterDoc());
+	        return "xlsCNFGOperatingExpenseMaster";
+	    		
+	    }
 	    
 	    @RequestMapping(value = "/grid/listRestructuredMaster", method = RequestMethod.GET)
 	    public @ResponseBody
@@ -343,6 +526,32 @@ public class RarocConfigController {
   			 return "raroc/rarocConfigMain";
   		}
 	    
+	    @RequestMapping(value = "/grid/listCNFGRestructuredMaster", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGRestructuredMaster(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGRestructuredMaster(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    
+	    @RequestMapping(value = "/listCNFGRestructuredMaster/doc", method = RequestMethod.GET)
+	    public String listCNFGRestructuredMasterDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.restructuredMasterDoc());
+	        return "xlsCNFGRestructuredMaster";
+	    		
+	    }
+	    
 	    @RequestMapping(value = "/grid/listSensitivityIterationMaster", method = RequestMethod.GET)
 	    public @ResponseBody
 	    GridPage<RarocConfigModel> listSensitivityIterationMaster(
@@ -381,6 +590,32 @@ public class RarocConfigController {
   			 return "raroc/rarocConfigMain";
   		}
 	    
+	    @RequestMapping(value = "/grid/listCNFGSensitivityIterationMaster", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGSensitivityIterationMaster(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGSensitivityIterationMaster(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    
+	    @RequestMapping(value = "/listCNFGSensitivityIterationMaster/doc", method = RequestMethod.GET)
+	    public String listCNFGSensitivityIterationMasternDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.sensitivityIterationMasterDoc());
+	        return "xlsCNFGSensitivityIteration";
+	    		
+	    }
+	  
 	    //Asset Type
 	    
 	    @RequestMapping(value = "/grid/listAssetType", method = RequestMethod.GET)
@@ -421,6 +656,32 @@ public class RarocConfigController {
 			 return "raroc/rarocConfigMain";
 		}
 	    
+	    @RequestMapping(value = "/grid/listCNFGAssetType", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGAssetType(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGAssetType(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGAssetType/doc", method = RequestMethod.GET)
+	    public String listCNFGAssetTypeDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.assetTypeDoc());
+	        return "xlsCNFGAssetType";
+	    		
+	    }
+	    
+	    
 	    //Business Unit
 	    
 	    @RequestMapping(value = "/grid/listBusinessUnit", method = RequestMethod.GET)
@@ -460,6 +721,31 @@ public class RarocConfigController {
 			}
 			 return "raroc/rarocConfigMain";
 		}
+	    
+	    @RequestMapping(value = "/grid/listCNFGBusinessUnit", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGBusinessUnit(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGBusinessUnit(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGBusinessUnit/doc", method = RequestMethod.GET)
+	    public String listCNFGBusinessUnitDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.businessUnitDoc());
+	        return "xlsCNFGBusinessUnit";
+	    		
+	    }
 	    
 	    
 	    //FIN Haircut
@@ -503,6 +789,31 @@ public class RarocConfigController {
 			 return "raroc/rarocConfigMain";
 		}
 	    
+	    @RequestMapping(value = "/grid/listCNFGFinHaircut", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGFinHaircut(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGFinHaircut(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGFinHaircut/doc", method = RequestMethod.GET)
+	    public String listCNFGFinHaircutDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.finHaircutDoc());
+	        return "xlsCNFGFinHaircut";
+	    		
+	    }
+	    
 //Internal Rating Model
 	    
 	    @RequestMapping(value = "/grid/listInternalRatingModel", method = RequestMethod.GET)
@@ -544,6 +855,30 @@ public class RarocConfigController {
 		}
 	    
 	    
+	    @RequestMapping(value = "/grid/listCNFGInternalRatingModel", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGInternalRatingModel(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGInternalRatingModel(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
+	    
+	    @RequestMapping(value = "/listCNFGInternalRatingModel/doc", method = RequestMethod.GET)
+	    public String listCNFGInternalRatingModelDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.internalRatingModelDoc());
+	        return "xlsCNFGInternalRatingModel";
+	    		
+	    }
 //Internal Rating Model
 	    
 	    @RequestMapping(value = "/grid/listRatingModelMapping", method = RequestMethod.GET)
@@ -584,5 +919,28 @@ public class RarocConfigController {
 			 return "raroc/rarocConfigMain";
 		}
 	    
+	    @RequestMapping(value = "/grid/listCNFGRatingModelMapping", method = RequestMethod.GET)
+	    public @ResponseBody
+	    GridPage<RarocConfigModel> listCNFGRatingModelMapping(
+	            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+	            @RequestParam(value = "max", required = false, defaultValue = "20") int max,
+	            @RequestParam(value = "sidx", required = false) String sidx,
+	            @RequestParam(value = "sord", required = false) String sord,
+	            @RequestParam(value = "searchField", required = false) String searchField,
+	            @RequestParam(value = "searchOper", required = false) String searchOper,
+	            @RequestParam(value = "searchString", required = false) String searchString,
+	            HttpServletRequest request, HttpServletResponse response) throws CustomException {
+	        csrfTokenService.removeTokenFromSession(request);
+	        response.setHeader("_tk", csrfTokenService.getTokenFromSession(request));
+	        GridPage<RarocConfigModel> gridList = rarocConfigService.listCNFGRatingModelMapping(page, max, sidx, sord, searchField, searchOper, searchString, request);
+	        return gridList;
+	    }
 	    
+	    @RequestMapping(value = "/listCNFGRatingModelMapping/doc", method = RequestMethod.GET)
+	    public String listCNFGRatingModelMappingDoc(Map<String, Object> map, HttpServletRequest request) {
+	        HttpSession session = request.getSession(false);
+	        map.put("list",rarocConfigService.ratingModelMappingDoc());
+	        return "xlsCNFGRatingModelMapping";
+	    		
+	    }
 }
