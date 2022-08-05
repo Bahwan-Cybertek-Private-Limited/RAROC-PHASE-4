@@ -35,6 +35,14 @@ public class RarocConfigServiceImpl implements RarocConfigService{
 		 String userid = (String) session.getAttribute("userid");
 	        return rarocConfigDao.listRarocConfig(page, max, sidx, sord, searchField, searchOper, searchString, userid);
 	}
+	
+	@Override
+	public GridPage<RarocConfigModel> listRarocCNFGMaster(int page, int max, String sidx, String sord, String searchField,
+			String searchOper, String searchString, HttpServletRequest request) throws CustomException {
+		 HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listRarocCNFGMaster(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
 
 	@Override
 	public GridPage<RarocConfigModel> listInternalRating(int page, int max, String sidx, String sord,
@@ -152,7 +160,86 @@ public class RarocConfigServiceImpl implements RarocConfigService{
 	public List<RarocConfigModel> listSensitivityIterationMasterDoc() {
 		return rarocConfigDao.listSensitivityIterationMasterDoc();
 	}
+	
+	
+	
+	
+	
+	@Override
+	public List<RarocConfigModel> rarocMasterDoc() {
+		
+		return rarocConfigDao.rarocMasterDoc();
+	}
 
+	@Override
+	public List<RarocConfigModel> internalRatingDoc() {
+		return rarocConfigDao.internalRatingDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> externalRatingDoc() {
+		return rarocConfigDao.externalRatingDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> guarantorMasterDoc() {
+		return rarocConfigDao.guarantorMasterDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> othIncomeMasterDoc() {
+		return rarocConfigDao.othIncomeMasterDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> cCFMasterDoc() {
+		return rarocConfigDao.cCFMasterDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> operatingExpenseMasterDoc() {
+		return rarocConfigDao.operatingExpenseMasterDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> restructuredMasterDoc() {
+		return rarocConfigDao.restructuredMasterDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> sensitivityIterationMasterDoc() {
+		return rarocConfigDao.sensitivityIterationMasterDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> assetTypeDoc() {
+		return rarocConfigDao.assetTypeDoc();
+	}
+
+	@Override
+	public List<RarocConfigModel> businessUnitDoc() {
+		return rarocConfigDao.businessUnitDoc();
+	}
+	
+	@Override
+	public List<RarocConfigModel> finHaircutDoc() {
+		return rarocConfigDao.finHaircutDoc();
+
+	}
+	
+	
+	@Override
+	public List<RarocConfigModel> internalRatingModelDoc() {
+		return rarocConfigDao.internalRatingModelDoc();
+
+	}
+	
+	@Override
+	public List<RarocConfigModel> ratingModelMappingDoc() {
+		return rarocConfigDao.ratingModelMappingDoc();
+
+	}
+	
 	@Override
 	public List<RarocConfigModel>  rarocMasterReadxls(MultipartFile file) throws IOException {
 		return rarocConfigDao.rarocMasterReadxls(file);
@@ -429,6 +516,121 @@ public class RarocConfigServiceImpl implements RarocConfigService{
 	public void approveBusinessUnit() {
 		rarocConfigDao.approveBusinessUnit();
 		
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGInternalRating(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGInternalRating(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGExternalRating(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGExternalRating(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGGuarantorMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGGuarantorMaster(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGOthIncomeMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGOthIncomeMaster(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGCCFMaster(int page, int max, String sidx, String sord, String searchField,
+			String searchOper, String searchString, HttpServletRequest request) throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGCCFMaster(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGOperatingExpenseMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGOperatingExpenseMaster(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGRestructuredMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGRestructuredMaster(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGSensitivityIterationMaster(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGSensitivityIterationMaster(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGAssetType(int page, int max, String sidx, String sord, String searchField,
+			String searchOper, String searchString, HttpServletRequest request) throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGAssetType(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGBusinessUnit(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGBusinessUnit(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGFinHaircut(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGFinHaircut(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGInternalRatingModel(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGInternalRatingModel(page, max, sidx, sord, searchField, searchOper, searchString, userid);
+	}
+
+	@Override
+	public GridPage<RarocConfigModel> listCNFGRatingModelMapping(int page, int max, String sidx, String sord,
+			String searchField, String searchOper, String searchString, HttpServletRequest request)
+			throws CustomException {
+		HttpSession session = request.getSession(false);
+		 String userid = (String) session.getAttribute("userid");
+	        return rarocConfigDao.listCNFGRatingModelMapping(page, max, sidx, sord, searchField, searchOper, searchString, userid);
 	}
 
 	

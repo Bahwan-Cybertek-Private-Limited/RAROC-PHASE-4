@@ -26,4 +26,19 @@
 <bean id="xlsFinHaircut" class="atrix.st.view.XLSFinHaircut"/>
 <bean id="xlsInternalRatingModel" class="atrix.st.view.XLSInternalRatingModel"/>
 <bean id="xlsRatingModelMapping" class="atrix.st.view.XLSRatingModelMapping"/>
+
+<bean id="xlsCNFGRarocMaster" class="atrix.st.view.XLSCNFGRarocMaster"/>
+<bean id="xlsCNFGCCFMaster" class="atrix.st.view.XLSCNFGCCFMaster"/>
+<bean id="xlsCNFGGuarantor" class="atrix.st.view.XLSCNFGGuarantor"/>
+<bean id="xlsCNFGExternalRating" class="atrix.st.view.XLSCNFGExternalRating"/>
+<bean id="xlsCNFGInternalRating" class="atrix.st.view.XLSCNFGInternalRating"/>
+<bean id="xlsCNFGOthIncome" class="atrix.st.view.XLSCNFGOthIncome"/>
+<bean id="xlsCNFGOperatingExpenseMaster" class="atrix.st.view.XLSCNFGOperatingExpenseMaster"/>
+<bean id="xlsCNFGRestructuredMaster" class="atrix.st.view.XLSCNFGRestructuredMaster"/>
+<bean id="xlsCNFGSensitivityIteration" class="atrix.st.view.XLSCNFGSensitivityIteration"/>
+<bean id="xlsCNFGAssetType" class="atrix.st.view.XLSCNFGAssetType"/>
+<bean id="xlsCNFGBusinessUnit" class="atrix.st.view.XLSCNFGBusinessUnit"/>
+<bean id="xlsCNFGFinHaircut" class="atrix.st.view.XLSCNFGFinHaircut"/>
+<bean id="xlsCNFGInternalRatingModel" class="atrix.st.view.XLSCNFGInternalRatingModel"/>
+<bean id="xlsCNFGRatingModelMapping" class="atrix.st.view.XLSCNFGRatingModelMapping"/>
 </beans>
